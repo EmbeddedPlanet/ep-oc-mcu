@@ -205,6 +205,18 @@ public:
     NCV7608(mbed::SPI& spi, PinName csb = NC, PinName global_en = NC);
 
     /**
+     * Instantiate an NCV7608 driver
+     * @param[in] spi SPI bus instance to use for communication (16-bit format!)
+     * @param[in] csb Chip select "bar" DigitalOut object
+     * @param[in] global_en Global enable pin, DigitalOut object
+     *
+     * @note The SPI bus instance used must be configured for 16-bit format
+     * to work properly!
+     */
+    NCV7608(mbed::SPI& spi, mbed::DigitalOut* csb,
+            mbed::DigitalOut* global_en);
+
+    /**
      * Destructor
      */
     ~NCV7608(void);
@@ -297,6 +309,9 @@ protected:
     uint16_t _cached_diag;  /** Cached diagnostics bits */
 
     PlatformMutex _mutex;
+
+    bool _owns_csb;  /** Flag if this object owns/created the CSB output object */
+    bool _owns_gen;  /** Flag if this object owns/created the global en output object */
 
 };
 

@@ -31,27 +31,34 @@
 using namespace ep;
 
 NCV7608::NCV7608(mbed::SPI& spi, PinName csb, PinName global_en) :
-        _spi(spi), _cs(nullptr), _global_en(nullptr), _cached_state(0), _cached_diag(
-                0) {
+        _spi(spi), _cs(nullptr), _global_en(nullptr), _cached_state(0),
+        _cached_diag(0), _owns_csb(false), _owns_gen(false) {
 
     // Instantiate optional control outputs
     if (csb != NC) {
         _cs = new mbed::DigitalOut(csb, 1);
+        _owns_csb = true;
     }
 
     if (global_en != NC) {
         // Disabled by default
         _global_en = new mbed::DigitalOut(global_en, 0);
+        _owns_csb = true;
     }
+}
+
+NCV7608::NCV7608(mbed::SPI& spi, mbed::DigitalOut* csb,
+        mbed::DigitalOut* global_en) : _spi(spi), _cs(csb), _global_en(global_en),
+                _cached_state(0), _cached_diag(0), _owns_csb(false), _owns_gen(false) {
 }
 
 NCV7608::~NCV7608(void) {
     // Clean up any dynamically allocated members
-    if (_cs != nullptr) {
+    if (_cs != nullptr && _owns_csb) {
         delete _cs;
     }
 
-    if (_global_en != nullptr) {
+    if (_global_en != nullptr && _owns_gen) {
         delete _global_en;
     }
 }
