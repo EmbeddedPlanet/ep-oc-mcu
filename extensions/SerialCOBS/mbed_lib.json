@@ -1,0 +1,7 @@
+{
+    "name": "serialcobs",
+    "config": {
+        "rxbuf-size": 256,
+        "txbuf-size": 256
+    }
+}
