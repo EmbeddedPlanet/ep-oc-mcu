@@ -42,7 +42,7 @@ float ResistorDivider::get_R_pu_ohms(void) {
     } else {
         // Calculate pu
 #if MBED_MAJOR_VERSION == 5
-        return (r_pd * ((vin_volts / (adc_in.read() * MBED_CONF_TARGET_DEFAULT_ADC_VREF))));
+        return (r_pd * ((vin_volts / (adc_in->read() * MBED_CONF_TARGET_DEFAULT_ADC_VREF))));
 #else
         return (r_pd * ((vin_volts / adc_in->read_voltage()) - 1.0f));
 #endif
@@ -56,7 +56,7 @@ float ResistorDivider::get_R_pd_ohms(void) {
     } else {
         // Calculate pd
 #if MBED_MAJOR_VERSION == 5
-        return (r_pu * (1.0f / ((vin_volts / (adc_in.read() * MBED_CONF_TARGET_DEFAULT_ADC_VREF)) - 1.0f )));
+        return (r_pu * (1.0f / ((vin_volts / (adc_in->read() * MBED_CONF_TARGET_DEFAULT_ADC_VREF)) - 1.0f )));
 #else
         return (r_pu * (1.0f / ((vin_volts / adc_in->read_voltage()) - 1.0f)));
 #endif
@@ -70,7 +70,7 @@ float ResistorDivider::get_Vin_volts(void) {
     } else {
         // Calculate vin_volts
 #if MBED_MAJOR_VERSION == 5
-        return (((r_pu + r_pd) / r_pd) * (adc_in.read() * MBED_CONF_TARGET_DEFAULT_ADC_VREF));
+        return (((r_pu + r_pd) / r_pd) * (adc_in->read() * MBED_CONF_TARGET_DEFAULT_ADC_VREF));
 #else
         return (((r_pu + r_pd) / r_pd) * adc_in->read_voltage());
 #endif
