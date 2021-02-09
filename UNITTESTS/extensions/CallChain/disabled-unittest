@@ -7,12 +7,12 @@ set(unittest-includes ${unittest-includes}
   .
   ../
   ../../mbed-os/
-  ../../mbed-os/platform/
+  ../../mbed-os/platform/cxxsupport/
+  ../../mbed-os/platform/include/
   ../platform/
 )
 
 set(unittest-sources
-  ../../mbed-os/UNITTESTS/stubs/mbed_assert_stub.cpp
 )
 
 set(unittest-test-sources
