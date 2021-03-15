@@ -1,0 +1,10 @@
+{
+    "name": "gnss",
+    "config": {
+        "libnmea-parser-count": {
+            "help": "Number of libnmea parsers",
+            "value": 4,
+            "macro_name": "PARSER_COUNT"
+        }
+    }
+}

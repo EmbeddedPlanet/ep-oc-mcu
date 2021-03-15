@@ -1,0 +1,8 @@
+libnmea/examples/*
+libnmea/tests/*
+libnmea/src/parsers/gpgga.*
+libnmea/src/parsers/gpgll.*
+libnmea/src/parsers/gpgsv.*
+libnmea/src/parsers/gprmc.*
+libnmea/src/nmea/parser*.*
+libnmea/src/nmea/nmea.c

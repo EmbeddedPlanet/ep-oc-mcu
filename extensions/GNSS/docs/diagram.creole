@@ -1,0 +1,115 @@
+@startuml
+enum GNSSError {
+  GNSS_ERROR_OK
+  GNSS_ERROR_NOT_ENABLED
+  GNSS_ERROR_NOT_SUPPORTED
+  GNSS_ERROR_UNKNOWN_ERROR
+}
+
+enum FixType {
+  FIX_TYPE_INVALID
+  FIX_TYPE_2D
+  FIX_TYPE_3D
+  FIX_TYPE_UNKNOWN
+}
+
+enum GNSSProperty {
+  PROPERTY_HORIZONTAL_DILUTION_OF_PRECISION
+  PROPERTY_COURSE_OVER_GROUND
+  PROPERTY_SPEED_OVER_GROUND
+  PROPERTY_NUMBER_OF_SATELLITES
+  PROPERTY_MAX
+}
+
+enum GNSSPriority {
+  PRIORITY_GNSS
+  PRIORITY_WWAN
+}
+
+enum ME310eDRXMode {
+  EDRX_MODE_DISABLE
+  EDRX_MODE_ENABLE
+  EDRX_MODE_ENABLE_URC
+  EDRX_MODE_DISABLE_DISCARD
+}
+
+enum ME310eDRXAcT {
+  EDRX_ACT_NOT_EDRX
+  EDRX_ACT_GSM
+  EDRX_ACT_CAT_M1
+  EDRX_ACT_NB1
+}
+
+enum ME310NMEAStreamMode {
+  NMEA_STREAM_DISABLE
+  NMEA_STREAM_ENABLE_FIRST_FORMAT
+  NMEA_STREAM_ENABLE_SECOND_FORMAT
+  NMEA_STREAM_ENABLE_SECOND_FORMAT_RESERVE_PORT
+}
+
+class PositionInfo << (S,orchid) >> {
+  + time_t UtcTimestamp
+  + nmea_position Latitude
+  + nmea_position Longitude
+  + float HorizontalDilutionOfPrecision
+  + float Altitude
+  + FixType Fix
+  + float CourseOverGround
+  + float SpeedOverGround
+  + uint8_t NumberOfSatellites
+}
+
+class nmea_position << (S,orchid) >> {
+  + double minutes
+  + int degrees
+  + nmea_cardinal_t <<char>> cardinal
+}
+
+class GNSS {
+  - const intptr_t *_property_array
+  ----
+  + enable() : GNSSError
+  + disable() : GNSSError
+  + get_current_position() : PositionInfo
+  + on_new_position_info(mbed::Callback<void(PositionInfo&)> callback_function, std::chrono::duration sampling_rate) : GNSSError
+  + get_property(GNSSProperty key) : intptr_t
+  + set_gnss_properties(const intptr_t *property_array) : void
+}
+
+note left of GNSS
+  ""PositionInfo"" reference passed
+  to the callback is temporary and
+  must be copied for the data to persist
+end note
+
+note left of TELIT_ME310_GNSS
+  ""TinyGPSPlus"" is from the TinyGPS++ library
+end note
+
+note "From the libnmea library" as libnmea_note
+
+class TELIT_ME310_GNSS {
+  - *CellularDevice dev
+  - *ATHandler at_handler
+  - TinyGPSPlus values
+  + set_gnss_priority(GNSSPriority desired_priority) : GNSSError
+  + set_edrx_parameters(ME310eDRXMode mode, ME310eDRXAcT access_technology, char *req_edrx, char *req_pag_time_window) : GNSSError
+  + configure_gnss_data_stream(ME310NMEAStreamMode mode, bool gga, bool gll, bool gsa, bool gsv, bool rmc, bool vtg) : GNSSError
+  + configure_gnss_data_stream_extended(bool gngns, bool gngsa, bool glgsv, bool gpgrs, bool gagsv, bool gagsa, bool gavtg, bool gpgga, bool pqgsa, bool pqgsv, bool gnvtg, bool gnrmc, bool gngga) : GNSSError 
+  + as_unix_time(int year, int mon, int mday, int hour, int min, int sec) : time_t
+  + urc_gpgga(): void
+  + urc_gnrmc(): void
+}
+
+TELIT_ME310_GNSS --|> GNSS
+TELIT_ME310_GNSS ..> GNSSPriority
+TELIT_ME310_GNSS ..> ME310eDRXMode
+TELIT_ME310_GNSS ..> ME310eDRXAcT
+TELIT_ME310_GNSS ..> ME310NMEAStreamMode
+GNSS ..> PositionInfo
+GNSS ..> GNSSError
+GNSS ..> GNSSProperty
+PositionInfo ..> FixType
+PositionInfo ..> nmea_position
+nmea_position .. libnmea_note
+@enduml

@@ -1,0 +1,10 @@
+{
+    "name": "telit-me310-gnss",
+    "config": {
+        "enabled": {
+            "help": "Enable support for the ME310 GNSS controller",
+            "macro_name": "TELIT_ME310_GNSS_ENABLED",
+            "value": false
+        }
+    }
+}
