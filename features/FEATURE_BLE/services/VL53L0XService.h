@@ -45,7 +45,7 @@ public:
 
 	VL53L0XService() :
 		distance_desc(GattCharacteristic::BLE_GATT_FORMAT_UINT16,
-				GattCharacteristic::BLE_GATT_UNIT_ACCELERATION_METRES_PER_SECOND_SQUARED), distance_desc_ptr(&distance_desc),
+				GattCharacteristic::BLE_GATT_UNIT_LENGTH_METRE, -3), distance_desc_ptr(&distance_desc),
 		distance_char(VL53L0X_DISTANCE_CHAR_UUID, &distance,
 				GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_INDICATE | GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_NOTIFY,
 				(GattAttribute**)(&distance_desc_ptr), 1),

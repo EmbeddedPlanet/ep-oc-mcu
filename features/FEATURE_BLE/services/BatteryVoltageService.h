@@ -45,7 +45,7 @@ public:
 
 	BatteryVoltageService() :
 		battery_voltage_desc(GattCharacteristic::BLE_GATT_FORMAT_FLOAT32,
-				GattCharacteristic::BLE_GATT_UNIT_ELECTRIC_POTENTIAL_DIFFERENCE_VOLT), battery_voltage_desc_ptr(&battery_voltage_desc),
+				GattCharacteristic::BLE_GATT_UNIT_ELECTRIC_POTENTIAL_DIFFERENCE_VOLT, 0), battery_voltage_desc_ptr(&battery_voltage_desc),
 		battery_voltage_char(BATTERY_VOLTAGE_CHAR_UUID, &voltage,
 				GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_INDICATE | GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_NOTIFY,
 				(GattAttribute**)(&battery_voltage_desc_ptr), 1),
